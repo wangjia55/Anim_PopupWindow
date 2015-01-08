@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.jacob.anim.popup.ShowLeftPopup;
+
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -31,7 +33,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_show_left:
-
+                ShowLeftPopup popup = new ShowLeftPopup(getApplication());
+                popup.show(mImageViewLeft);
                 break;
             case R.id.button_show_right:
 

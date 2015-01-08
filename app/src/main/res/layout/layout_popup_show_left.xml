@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="40dp"
+              android:orientation="horizontal"
+              android:background="@drawable/bg_popup"
+              android:gravity="center"
+              tools:context=".MainActivity">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="MENU A"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:layout_margin="5dp"/>
+
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="MENU B"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:layout_margin="5dp"/>
+</LinearLayout>
