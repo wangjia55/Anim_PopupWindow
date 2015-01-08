@@ -19,13 +19,13 @@ import com.jacob.anim.R;
  * Date : 15-1-8
  * Description : 这个类是用来xxx
  */
-public class ShowLeftPopup extends PopupWindow {
+public class ShowTopPopup extends PopupWindow {
     private ObjectAnimator animShow;
     private ObjectAnimator animDismiss;
     private View rootView;
     private Context context;
     private boolean needDismiss = false;
-    private int  rootViewWidth;
+    private int rootViewHeight;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -35,11 +35,11 @@ public class ShowLeftPopup extends PopupWindow {
         }
     };
 
-    public ShowLeftPopup(Context context) {
+    public ShowTopPopup(Context context) {
         super(context);
         this.context = context;
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        rootView = layoutInflater.inflate(R.layout.layout_popup_show_left, null);
+        rootView = layoutInflater.inflate(R.layout.layout_popup_show_top, null);
 
         setBackgroundDrawable(new BitmapDrawable());
         setWidth(WindowManager.LayoutParams.MATCH_PARENT);
@@ -55,23 +55,22 @@ public class ShowLeftPopup extends PopupWindow {
         int height = archor.getMeasuredHeight();
         int with = archor.getMeasuredWidth();
 
-        setHeight(height);
-
+        setWidth(with);
         int[] location = new int[2];
         archor.getLocationOnScreen(location);
-        rootViewWidth = dip2px(context,180);
-        setWidth(rootViewWidth);
+        rootViewHeight = dip2px(context, 180);
+        setHeight(rootViewHeight);
 
-        animShow = ObjectAnimator.ofFloat(rootView, View.TRANSLATION_X, -rootViewWidth, 25, 10, 0).setDuration(300);
-        animDismiss = ObjectAnimator.ofFloat(rootView, View.TRANSLATION_X, 0, -rootViewWidth).setDuration(200);
+        animShow = ObjectAnimator.ofFloat(rootView, View.TRANSLATION_Y, rootViewHeight, -20, 5, 0).setDuration(300);
+        animDismiss = ObjectAnimator.ofFloat(rootView, View.TRANSLATION_Y, 0, rootViewHeight).setDuration(200);
 
-        showAtLocation(archor, Gravity.NO_GRAVITY, location[0] + with, location[1]);
+        showAtLocation(archor, Gravity.NO_GRAVITY, location[0], location[1] - rootViewHeight);
         animShow.start();
     }
 
-    public static int dip2px(Context context, float dipValue){
+    public static int dip2px(Context context, float dipValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
-        return (int)(dipValue * scale + 0.5f);
+        return (int) (dipValue * scale + 0.5f);
     }
 
     /**
@@ -81,11 +80,11 @@ public class ShowLeftPopup extends PopupWindow {
      */
     @Override
     public void dismiss() {
-        if (!needDismiss){
+        if (!needDismiss) {
             animDismiss.start();
             handler.sendEmptyMessageDelayed(10, 350);
         }
-        if (needDismiss){
+        if (needDismiss) {
             handler.removeMessages(10);
             needDismiss = false;
             super.dismiss();
