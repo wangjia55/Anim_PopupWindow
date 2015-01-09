@@ -9,6 +9,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.jacob.anim.R;
@@ -20,13 +22,16 @@ import com.jacob.anim.UIUtils;
  * Date : 15-1-8
  * Description : 这个类是用来xxx
  */
-public class ShowLeftPopup extends PopupWindow {
+public class ShowBottomPopup extends PopupWindow {
     private ObjectAnimator animShow;
     private ObjectAnimator animDismiss;
     private View rootView;
     private Context context;
     private boolean needDismiss = false;
-    private int  rootViewWidth;
+    private int rootViewHeight;
+    private ListView mListView;
+    //    String[] res = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "H", "I", "H", "I"};
+    private String[] res = new String[]{"A", "B", "C", "D", "E", "F"};
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -36,37 +41,41 @@ public class ShowLeftPopup extends PopupWindow {
         }
     };
 
-    public ShowLeftPopup(Context context) {
+    public ShowBottomPopup(Context context) {
         super(context);
         this.context = context;
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
-        rootView = layoutInflater.inflate(R.layout.layout_popup_show_left, null);
-
+        rootView = LayoutInflater.from(context).inflate(R.layout.layout_popup_show_bottom, null);
+        setContentView(rootView);
         setBackgroundDrawable(new BitmapDrawable());
-        setWidth(WindowManager.LayoutParams.MATCH_PARENT);
-        setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         setTouchable(true);
         setFocusable(true);
         setOutsideTouchable(true);
-        setContentView(rootView);
+        setWidth(WindowManager.LayoutParams.MATCH_PARENT);
+        setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+
+        mListView = (ListView) rootView.findViewById(R.id.listView);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, res);
+        mListView.setAdapter(adapter);
+        rootViewHeight = UIUtils.setListViewHeightBasedOnChildren(mListView)+50;
     }
 
 
-    public void show(View archor) {
+    public void show(View archor, int screentHeight) {
         int height = archor.getMeasuredHeight();
         int with = archor.getMeasuredWidth();
 
-        setHeight(height);
-
         int[] location = new int[2];
         archor.getLocationOnScreen(location);
-        rootViewWidth = UIUtils.dip2px(context,180);
-        setWidth(rootViewWidth);
 
-        animShow = ObjectAnimator.ofFloat(rootView, View.TRANSLATION_X, -rootViewWidth, 25, 10, 0).setDuration(300);
-        animDismiss = ObjectAnimator.ofFloat(rootView, View.TRANSLATION_X, 0, -rootViewWidth).setDuration(200);
+        int h = screentHeight - location[1] - height;
+        if (rootViewHeight > h) {
+            rootViewHeight = h;
+        }
+        setHeight(rootViewHeight);
+        animShow = ObjectAnimator.ofFloat(rootView, View.TRANSLATION_Y, height - rootViewHeight, 20, -5, 0).setDuration(300);
+        animDismiss = ObjectAnimator.ofFloat(rootView, View.TRANSLATION_Y, 0, -rootViewHeight).setDuration(200);
 
-        showAtLocation(archor, Gravity.NO_GRAVITY, location[0] + with, location[1]);
+        showAtLocation(archor, Gravity.NO_GRAVITY, location[0], location[1] + height);
         animShow.start();
     }
 
@@ -78,11 +87,11 @@ public class ShowLeftPopup extends PopupWindow {
      */
     @Override
     public void dismiss() {
-        if (!needDismiss){
+        if (!needDismiss) {
             animDismiss.start();
             handler.sendEmptyMessageDelayed(10, 350);
         }
-        if (needDismiss){
+        if (needDismiss) {
             handler.removeMessages(10);
             needDismiss = false;
             super.dismiss();

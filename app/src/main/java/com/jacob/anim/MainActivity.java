@@ -1,11 +1,14 @@
 package com.jacob.anim;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.jacob.anim.popup.ShowBottomPopup;
 import com.jacob.anim.popup.ShowLeftPopup;
 import com.jacob.anim.popup.ShowTopPopup;
 
@@ -40,10 +43,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.button_show_right:
                 ShowTopPopup popupTop = new ShowTopPopup(getApplication());
                 popupTop.show(mImageViewRight);
-
                 break;
             case R.id.button_show_center:
-
+                Display display = getWindowManager().getDefaultDisplay();
+                Point mPoint = new Point();
+                display.getSize(mPoint);
+                int width = mPoint.x;
+                int height = mPoint.y;
+                ShowBottomPopup bottomPopup = new ShowBottomPopup(getApplication());
+                bottomPopup.show(mButtonShow,height);
                 break;
         }
     }

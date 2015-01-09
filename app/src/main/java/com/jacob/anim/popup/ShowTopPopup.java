@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 
 import com.jacob.anim.R;
+import com.jacob.anim.UIUtils;
 
 /**
  * Package : com.jacob.anim.popup
@@ -58,7 +59,7 @@ public class ShowTopPopup extends PopupWindow {
         setWidth(with);
         int[] location = new int[2];
         archor.getLocationOnScreen(location);
-        rootViewHeight = dip2px(context, 180);
+        rootViewHeight =  UIUtils.dip2px(context, 180);
         setHeight(rootViewHeight);
 
         animShow = ObjectAnimator.ofFloat(rootView, View.TRANSLATION_Y, rootViewHeight, -20, 5, 0).setDuration(300);
@@ -68,10 +69,6 @@ public class ShowTopPopup extends PopupWindow {
         animShow.start();
     }
 
-    public static int dip2px(Context context, float dipValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dipValue * scale + 0.5f);
-    }
 
     /**
      * 这里是重点：两次调用dismiss，如果直接使用super方法是没有办法显示动画的，
